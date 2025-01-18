@@ -34,6 +34,7 @@ public class Reservation
 
     public void UpdateDates(DateTime checkIn, DateTime checkOut)
     {
-
+        CheckIn = checkIn;
+        CheckOut = checkOut;
     }
 }
