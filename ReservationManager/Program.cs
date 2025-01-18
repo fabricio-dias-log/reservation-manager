@@ -1,4 +1,5 @@
 ﻿using ReservationManager.Entities;
+using ReservationManager.Entities.Exceptions;
 
 namespace ReservationManager;
 
@@ -6,21 +7,17 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.Write("Room number: ");
-        int roomNumber = int.Parse(Console.ReadLine());
-
-        Console.Write("Check-in date (dd/MM/yyyy): ");
-        DateTime checkInDate = DateTime.Parse(Console.ReadLine());
-
-        Console.Write("Check-out date (dd/MM/yyyy): ");
-        DateTime checkOutDate = DateTime.Parse(Console.ReadLine());
-
-        if (checkOutDate <= checkInDate)
+        try
         {
-            Console.WriteLine("Error in reservation: Check-out date must be after check-in date!");
-        }
-        else
-        {
+            Console.Write("Room number: ");
+            int roomNumber = int.Parse(Console.ReadLine());
+
+            Console.Write("Check-in date (dd/MM/yyyy): ");
+            DateTime checkInDate = DateTime.Parse(Console.ReadLine());
+
+            Console.Write("Check-out date (dd/MM/yyyy): ");
+            DateTime checkOutDate = DateTime.Parse(Console.ReadLine());
+
             Reservation reservation = new Reservation(roomNumber, checkInDate, checkOutDate);
             Console.WriteLine(reservation);
             Console.WriteLine();
@@ -32,19 +29,21 @@ class Program
             Console.Write("Check-out date (dd/MM/yyyy): ");
             checkOutDate = DateTime.Parse(Console.ReadLine());
 
-            string error = reservation.UpdateDates(checkInDate, checkOutDate);
+            reservation.UpdateDates(checkInDate, checkOutDate);
 
-            if (error != null)
-            {
-                Console.WriteLine(error);
-            }
-            else
-            {
-                Console.WriteLine(reservation);
-            }
-
+            Console.WriteLine(reservation);
         }
-
-
+        catch (DomainException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        catch (FormatException e)
+        {
+            Console.WriteLine($"Format error: {e.Message}");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Unexpected error: {e.Message}");
+        }
     }
 }
